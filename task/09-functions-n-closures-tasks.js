@@ -156,7 +156,12 @@ function retry(func, attempts) {
  *
  */
 function logger(func, logFunc) {
-    throw new Error('Not implemented');
+    return function(...args){
+        args.toString();
+        logFunc(`${func.name}(${args}) starts`);
+        logFunc(`${func.name}(${args}) ends`);
+        return func(...args)
+    }
 }
 
 
