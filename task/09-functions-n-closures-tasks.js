@@ -25,8 +25,8 @@
  *   getComposition(Math.sin, Math.asin)(x) => Math.sin(Math.acos(x))
  *
  */
-function getComposition(f,g) {
-    throw new Error('Not implemented');
+function getComposition(f, g) {
+    return (x) => (f(g(x)))
 }
 
 
@@ -47,7 +47,7 @@ function getComposition(f,g) {
  *
  */
 function getPowerFunction(exponent) {
-    throw new Error('Not implemented');
+    return (x) => Math.pow(x, exponent)
 }
 
 
@@ -64,8 +64,12 @@ function getPowerFunction(exponent) {
  *   getPolynom(8)     => y = 8
  *   getPolynom()      => null
  */
-function getPolynom() {
-    throw new Error('Not implemented');
+function getPolynom(...args) {
+    if(!args.length) return null;
+    args = args.reverse();
+    return function(x){
+        return args.reduce( (cv,nv,index) => cv+nv*(Math.pow(x,index)) )
+    }
 }
 
 
@@ -84,7 +88,17 @@ function getPolynom() {
  *   memoizer() => the same random number  (next run, returns the previous cached result)
  */
 function memoize(func) {
-    throw new Error('Not implemented');
+    let cache = [];
+    return function (arg1, arg2) {
+        let args = [arg1, arg2];
+        for (let i = 0; i < cache.length; i++) {
+            if (cache[i][0] === args[0] && cache[i][1] === args[1]) return cache[i][2];
+        }
+        args.push(func(arg1, arg2));
+        cache.push(args);
+        return args[args.length - 1];
+    }
+
 }
 
 
@@ -104,7 +118,17 @@ function memoize(func) {
  * retryer() => 2
  */
 function retry(func, attempts) {
-    throw new Error('Not implemented');
+    let res;
+    return function f(attempts){
+        if(attempts === 0) return null;
+        try {
+            res = func();
+        } catch(error){
+            attempts--;
+            f(attempts)
+        }
+        return res;
+    }
 }
 
 
@@ -149,8 +173,11 @@ function logger(func, logFunc) {
  *   partialUsingArguments(fn, 'a','b','c')('d') => 'abcd'
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
-function partialUsingArguments(fn) {
-    throw new Error('Not implemented');
+function partialUsingArguments(fn, ...args) {
+    let res = args
+    return function(...args1){
+        return res.concat(args1).join('')
+    }
 }
 
 
@@ -171,7 +198,14 @@ function partialUsingArguments(fn) {
  *   getId10() => 11
  */
 function getIdGeneratorFunction(startFrom) {
-    throw new Error('Not implemented');
+    let counter = 0;
+    return function (){
+        counter++;
+        if (counter === 1) {
+            return startFrom
+        }
+        return (++startFrom)
+    }
 }
 
 
